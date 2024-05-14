@@ -1,0 +1,72 @@
+name: ci
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches:
+    - "main"
+    - "renovate/lock-file-maintenance"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: full
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, llvm-tools-preview
+
+      - name: Setup Rust toolchain (nightly)
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+
+      - name: Cache rust build files
+        uses: Leafwing-Studios/cargo-cache@c7e8aa40ae2c975774d3bd766beb92927cfd7771 # v1
+
+      - name: Install Cargo LLVM cov
+        uses: baptiste0928/cargo-install@21a18ba3bf4a184d1804e8b759930d3471b1c941 # v2
+        with:
+          crate: cargo-llvm-cov
+
+      - name: Setup Rust problem matchers
+        uses: r7kamura/rust-problem-matchers@2c2f1016021a7455a6b5b4bbae31145f3b3cd83a # v1
+
+      - name: Cargo check
+        run: cargo check --all-targets --all-features
+
+      - name: Cargo fmt
+        run: cargo +nightly fmt --all -- --check
+
+      - name: Cargo clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings --force-warn deprecated --force-warn dead-code
+
+      ## Tests
+      - name: Run unit tests
+        run: cargo llvm-cov test --lib --lcov --output-path unit-lcov.info
+
+      - name: Run integration tests
+        run: cargo llvm-cov test --test '*' --lcov --output-path it-lcov.info
+
+      - name: Upload unit tests coverage report to codecov
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3
+        with:
+          files: unit-lcov.info
+          flags: unit
+
+      - name: Upload integration tests coverage report to codecov
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3
+        with:
+          files: it-lcov.info
+          flags: integration
