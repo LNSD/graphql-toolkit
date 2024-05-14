@@ -30,7 +30,8 @@ jobs:
 
       - uses: MarcoIeni/release-plz-action@76e66a600f00c1f47dd1a2f3169f97a5213dc90b # v0.5
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_RELEASE_PLZ }}
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN_RELEASE_PLZ }}
         with:
           config: .github/release-plz.toml
           command: release-pr
