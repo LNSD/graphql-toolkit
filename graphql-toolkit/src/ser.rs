@@ -59,7 +59,7 @@ impl AstSerialize for OperationDefinition {
     {
         // If we are serializing an "operation definition" instance
         // assume that there is a single operation in the document
-        ser.serialize_operation_definition(self, None, true)
+        ser.serialize_operation_definition(self, None, true, true)
     }
 }
 
@@ -105,16 +105,17 @@ where
     fn serialize_executable_document(&mut self, value: &ExecutableDocument) -> anyhow::Result<()> {
         match &value.operations {
             DocumentOperations::Single(def) => {
-                // If the document contains a single operation and no fragments, it can be
-                // serialized as a "query shorthand" which omits the query keyword and operation
-                // name.
-                let is_single_operation = value.fragments.is_empty();
-                self.serialize_operation_definition(&def.node, None, is_single_operation)?;
+                self.serialize_operation_definition(&def.node, None, true, true)?;
             }
             DocumentOperations::Multiple(def) => {
                 let mut first_operation = true;
                 for (name, def) in def.iter() {
-                    self.serialize_operation_definition(&def.node, Some(name), first_operation)?;
+                    self.serialize_operation_definition(
+                        &def.node,
+                        Some(name),
+                        false,
+                        first_operation,
+                    )?;
                     first_operation = false;
                 }
             }
@@ -131,6 +132,7 @@ where
         &mut self,
         value: &OperationDefinition,
         name: Option<&Name>,
+        single: bool,
         first: bool,
     ) -> anyhow::Result<()> {
         if !first {
@@ -146,7 +148,7 @@ where
         //  { field }
         //
         // https://spec.graphql.org/October2021/#sec-Language.Operations.Query-shorthand
-        let shorthand = first
+        let shorthand = single
             && value.ty == OperationType::Query
             && name.is_none()
             && value.variable_definitions.is_empty()
