@@ -1,0 +1,13 @@
+---
+source: graphql-toolkit/tests/it_ser_pretty_formatter_query.rs
+expression: query
+---
+{
+  field1
+}
+fragment YourFragment on AnotherType {
+  field3
+}
+fragment MyFragment on SomeType {
+  field2
+}

@@ -1,6 +1,8 @@
 use std::io;
 
-pub use self::{compact_formatter::CompactFormatter, formatter::Formatter};
+pub use self::{
+    compact_formatter::CompactFormatter, formatter::Formatter, pretty_formatter::PrettyFormatter,
+};
 use crate::ast::{
     indexmap::IndexMap, BaseType, ConstValue, Directive, DocumentOperations, ExecutableDocument,
     Field, FragmentDefinition, FragmentSpread, InlineFragment, Name, Number, OperationDefinition,
@@ -10,6 +12,7 @@ use crate::ast::{
 
 mod compact_formatter;
 mod formatter;
+mod pretty_formatter;
 
 pub trait AstSerialize {
     fn serialize<W, F>(&self, ser: &mut Serializer<W, F>) -> anyhow::Result<()>
@@ -69,7 +72,7 @@ impl_serialize!(SelectionSet, serialize_selection_set);
 impl_serialize_positioned!(SelectionSet);
 impl_serialize!(Selection, serialize_selection);
 impl_serialize_positioned!(Selection);
-impl_serialize!(Field, serialize_field);
+impl_serialize!(Field, serialize_selection_field);
 impl_serialize_positioned!(Field);
 impl_serialize!(Name, serialize_name);
 impl_serialize_positioned!(Name);
@@ -122,7 +125,7 @@ where
         }
 
         for (name, fragment) in value.fragments.iter() {
-            self.serialize_fragment_definition(name, fragment)?;
+            self.serialize_fragment_definition(name, fragment, false)?;
         }
 
         Ok(())
@@ -137,7 +140,7 @@ where
     ) -> anyhow::Result<()> {
         if !first {
             self.formatter
-                .begin_operation_or_fragment_definition(&mut self.writer)?;
+                .before_operation_or_fragment_definition(&mut self.writer)?;
         }
 
         // Use the "query shorthand" if a document contains *only one operation* and
@@ -156,7 +159,7 @@ where
 
         // Operation signature
         if !shorthand {
-            // Operation type
+            // Type
             match value.ty {
                 OperationType::Query => {
                     self.formatter.write_keyword(&mut self.writer, "query")?;
@@ -170,15 +173,20 @@ where
                 }
             }
 
-            //  name
+            // Name
             if let Some(name) = name {
                 self.formatter.write_separator(&mut self.writer)?;
                 name.serialize(self)?;
             }
 
-            // variables definition
+            // Variables definition
+            if name.is_none() && !value.variable_definitions.is_empty() {
+                self.formatter
+                    .before_operation_variable_definitions(&mut self.writer)?;
+            }
             if !value.variable_definitions.is_empty() {
-                self.formatter.begin_arguments(&mut self.writer)?;
+                self.formatter.begin_parentheses(&mut self.writer)?;
+
                 let mut iter = value.variable_definitions.iter().peekable();
                 while let Some(def) = iter.next() {
                     def.serialize(self)?;
@@ -188,7 +196,8 @@ where
                         self.formatter.write_item_separator(&mut self.writer)?;
                     }
                 }
-                self.formatter.end_arguments(&mut self.writer)?;
+
+                self.formatter.end_parentheses(&mut self.writer)?;
             }
 
             // Directives
@@ -196,7 +205,8 @@ where
                 directive.serialize(self)?;
             }
 
-            self.formatter.end_operation_signature(&mut self.writer)?;
+            self.formatter
+                .after_operation_or_fragment_signature(&mut self.writer)?;
         }
 
         // Selection set
@@ -206,17 +216,24 @@ where
     }
 
     fn serialize_selection_set(&mut self, value: &SelectionSet) -> anyhow::Result<()> {
+        // Empty selection sets are not serialized
+        if value.items.is_empty() {
+            return Ok(());
+        }
+
         self.formatter.begin_block(&mut self.writer)?;
+
         let mut iter = value.items.iter().peekable();
         while let Some(selection) = iter.next() {
-            self.formatter.begin_block_item(&mut self.writer)?;
+            self.formatter.before_block_item(&mut self.writer)?;
             selection.serialize(self)?;
 
             // If there are more selections, add a separator
             if iter.peek().is_some() {
-                self.formatter.end_block_item(&mut self.writer)?;
+                self.formatter.after_block_item(&mut self.writer)?;
             }
         }
+
         self.formatter.end_block(&mut self.writer)?;
 
         Ok(())
@@ -232,29 +249,7 @@ where
         Ok(())
     }
 
-    fn serialize_arguments(
-        &mut self,
-        value: &[(Positioned<Name>, Positioned<Value>)],
-    ) -> anyhow::Result<()> {
-        self.formatter.begin_arguments(&mut self.writer)?;
-        let mut iter = value.iter().peekable();
-        while let Some((name, value)) = iter.next() {
-            name.serialize(self)?;
-            self.formatter
-                .write_name_value_separator(&mut self.writer)?;
-            value.serialize(self)?;
-
-            // If there are more arguments, add a separator
-            if iter.peek().is_some() {
-                self.formatter.write_item_separator(&mut self.writer)?;
-            }
-        }
-        self.formatter.end_arguments(&mut self.writer)?;
-
-        Ok(())
-    }
-
-    fn serialize_field(&mut self, value: &Field) -> anyhow::Result<()> {
+    fn serialize_selection_field(&mut self, value: &Field) -> anyhow::Result<()> {
         if let Some(alias) = &value.alias {
             alias.serialize(self)?;
             self.formatter
@@ -272,7 +267,207 @@ where
         }
 
         if !value.selection_set.node.items.is_empty() {
-            value.selection_set.serialize(self)?;
+            self.formatter.after_selection_signature(&mut self.writer)?;
+        }
+        value.selection_set.serialize(self)?;
+
+        Ok(())
+    }
+
+    fn serialize_fragment_spread(&mut self, value: &FragmentSpread) -> anyhow::Result<()> {
+        self.formatter.write_keyword(&mut self.writer, "...")?;
+        value.fragment_name.serialize(self)?;
+
+        for directive in value.directives.iter() {
+            directive.serialize(self)?;
+        }
+
+        Ok(())
+    }
+
+    fn serialize_inline_fragment(&mut self, value: &InlineFragment) -> anyhow::Result<()> {
+        self.formatter.write_keyword(&mut self.writer, "...")?;
+
+        if let Some(type_condition) = &value.type_condition {
+            self.formatter.before_type_condition(&mut self.writer)?;
+            type_condition.serialize(self)?;
+        }
+
+        for directive in value.directives.iter() {
+            directive.serialize(self)?;
+        }
+
+        if !value.selection_set.node.items.is_empty() {
+            self.formatter.after_selection_signature(&mut self.writer)?;
+        }
+        value.selection_set.serialize(self)?;
+
+        Ok(())
+    }
+
+    fn serialize_arguments(
+        &mut self,
+        value: &[(Positioned<Name>, Positioned<Value>)],
+    ) -> anyhow::Result<()> {
+        self.formatter.begin_parentheses(&mut self.writer)?;
+
+        let mut iter = value.iter().peekable();
+        while let Some((name, value)) = iter.next() {
+            name.serialize(self)?;
+            self.formatter
+                .write_name_value_separator(&mut self.writer)?;
+            value.serialize(self)?;
+
+            // If there are more arguments, add a separator
+            if iter.peek().is_some() {
+                self.formatter.write_item_separator(&mut self.writer)?;
+            }
+        }
+
+        self.formatter.end_parentheses(&mut self.writer)?;
+
+        Ok(())
+    }
+
+    fn serialize_directive(&mut self, value: &Directive) -> anyhow::Result<()> {
+        self.formatter.before_directive(&mut self.writer)?;
+
+        // Directive name
+        self.formatter.begin_directive(&mut self.writer)?;
+        value.name.serialize(self)?;
+
+        // Arguments
+        if !value.arguments.is_empty() {
+            self.serialize_arguments(&value.arguments)?;
+        }
+
+        Ok(())
+    }
+
+    fn serialize_variable_definition(&mut self, value: &VariableDefinition) -> anyhow::Result<()> {
+        // Variable name
+        self.formatter.begin_variable(&mut self.writer)?;
+        value.name.serialize(self)?;
+
+        // Variable name-type separator
+        self.formatter
+            .write_name_value_separator(&mut self.writer)?;
+
+        // Variable type
+        value.var_type.serialize(self)?;
+
+        if let Some(default_value) = &value.default_value {
+            self.formatter
+                .write_variable_default_value_separator(&mut self.writer)?;
+            default_value.serialize(self)?;
+        }
+
+        for directive in value.directives.iter() {
+            directive.serialize(self)?;
+        }
+
+        Ok(())
+    }
+
+    fn serialize_type(&mut self, value: &Type) -> anyhow::Result<()> {
+        match &value.base {
+            BaseType::Named(name) => {
+                name.serialize(self)?;
+            }
+            BaseType::List(list) => {
+                self.formatter.begin_array(&mut self.writer)?;
+                list.serialize(self)?;
+                self.formatter.end_array(&mut self.writer)?;
+            }
+        }
+
+        if !value.nullable {
+            self.formatter
+                .write_non_null_type_indicator(&mut self.writer)?;
+        }
+
+        Ok(())
+    }
+
+    fn serialize_fragment_definition(
+        &mut self,
+        name: &Name,
+        value: &Positioned<FragmentDefinition>,
+        first: bool,
+    ) -> anyhow::Result<()> {
+        if !first {
+            self.formatter
+                .before_operation_or_fragment_definition(&mut self.writer)?;
+        }
+
+        self.formatter.write_keyword(&mut self.writer, "fragment")?;
+
+        self.formatter.write_separator(&mut self.writer)?;
+        name.serialize(self)?;
+        self.formatter.write_separator(&mut self.writer)?;
+
+        value.node.type_condition.serialize(self)?;
+
+        for directive in value.node.directives.iter() {
+            directive.serialize(self)?;
+        }
+
+        self.formatter
+            .after_operation_or_fragment_signature(&mut self.writer)?;
+
+        value.node.selection_set.serialize(self)?;
+
+        Ok(())
+    }
+
+    fn serialize_type_condition(&mut self, value: &TypeCondition) -> anyhow::Result<()> {
+        self.formatter.write_keyword(&mut self.writer, "on")?;
+        self.formatter.write_separator(&mut self.writer)?;
+        value.on.serialize(self)
+    }
+
+    fn serialize_name(&mut self, value: &Name) -> anyhow::Result<()> {
+        self.formatter
+            .write_string_fragment(&mut self.writer, value)?;
+
+        Ok(())
+    }
+
+    fn serialize_value(&mut self, value: &Value) -> anyhow::Result<()> {
+        match value {
+            Value::Null => {
+                self.formatter.write_null(&mut self.writer)?;
+            }
+            Value::Number(value) => {
+                value.serialize(self)?;
+            }
+            // TODO: Support string character escaping
+            Value::String(value) => {
+                self.formatter.begin_string(&mut self.writer)?;
+                self.formatter
+                    .write_string_fragment(&mut self.writer, value)?;
+                self.formatter.end_string(&mut self.writer)?;
+            }
+            Value::Boolean(value) => {
+                self.formatter.write_bool(&mut self.writer, *value)?;
+            }
+            Value::Variable(name) => {
+                self.formatter.begin_variable(&mut self.writer)?;
+                name.serialize(self)?;
+            }
+            Value::Enum(value) => {
+                value.serialize(self)?;
+            }
+            Value::List(list) => {
+                self.serialize_value_array(list)?;
+            }
+            Value::Object(value) => {
+                self.serialize_value_object(value)?;
+            }
+            Value::Binary(value) => {
+                self.formatter
+                    .write_byte_array(&mut self.writer, &value[..])?;
+            }
         }
 
         Ok(())
@@ -280,6 +475,7 @@ where
 
     fn serialize_value_array(&mut self, value: &[Value]) -> anyhow::Result<()> {
         self.formatter.begin_array(&mut self.writer)?;
+
         let mut iter = value.iter().peekable();
         while let Some(value) = iter.next() {
             value.serialize(self)?;
@@ -289,13 +485,15 @@ where
                 self.formatter.write_item_separator(&mut self.writer)?;
             }
         }
+
         self.formatter.end_array(&mut self.writer)?;
 
         Ok(())
     }
 
-    fn serialize_object(&mut self, value: &IndexMap<Name, Value>) -> anyhow::Result<()> {
+    fn serialize_value_object(&mut self, value: &IndexMap<Name, Value>) -> anyhow::Result<()> {
         self.formatter.begin_object(&mut self.writer)?;
+
         let mut iter = value.iter().peekable();
         while let Some((key, value)) = iter.next() {
             key.serialize(self)?;
@@ -308,45 +506,8 @@ where
                 self.formatter.write_item_separator(&mut self.writer)?;
             }
         }
+
         self.formatter.end_object(&mut self.writer)?;
-
-        Ok(())
-    }
-
-    fn serialize_const_value_array(&mut self, value: &[ConstValue]) -> anyhow::Result<()> {
-        self.formatter.begin_array(&mut self.writer)?;
-        let mut iter = value.iter().peekable();
-        while let Some(value) = iter.next() {
-            value.serialize(self)?;
-
-            // If there are more items, add a separator
-            if iter.peek().is_some() {
-                self.formatter.write_item_separator(&mut self.writer)?;
-            }
-        }
-        self.formatter.end_array(&mut self.writer)?;
-
-        Ok(())
-    }
-
-    fn serialize_const_value_object(
-        &mut self,
-        value: &IndexMap<Name, ConstValue>,
-    ) -> anyhow::Result<()> {
-        self.formatter.begin_block(&mut self.writer)?;
-        let mut iter = value.iter().peekable();
-        while let Some((key, value)) = iter.next() {
-            key.serialize(self)?;
-            self.formatter
-                .write_name_value_separator(&mut self.writer)?;
-            value.serialize(self)?;
-
-            // If there are more items, add a separator
-            if iter.peek().is_some() {
-                self.formatter.write_item_separator(&mut self.writer)?;
-            }
-        }
-        self.formatter.end_block(&mut self.writer)?;
 
         Ok(())
     }
@@ -387,49 +548,44 @@ where
         Ok(())
     }
 
-    fn serialize_name(&mut self, value: &Name) -> anyhow::Result<()> {
-        self.formatter
-            .write_string_fragment(&mut self.writer, value)?;
+    fn serialize_const_value_array(&mut self, value: &[ConstValue]) -> anyhow::Result<()> {
+        self.formatter.begin_array(&mut self.writer)?;
+
+        let mut iter = value.iter().peekable();
+        while let Some(value) = iter.next() {
+            value.serialize(self)?;
+
+            // If there are more items, add a separator
+            if iter.peek().is_some() {
+                self.formatter.write_item_separator(&mut self.writer)?;
+            }
+        }
+
+        self.formatter.end_array(&mut self.writer)?;
 
         Ok(())
     }
 
-    fn serialize_value(&mut self, value: &Value) -> anyhow::Result<()> {
-        match value {
-            Value::Null => {
-                self.formatter.write_null(&mut self.writer)?;
-            }
-            Value::Number(value) => {
-                value.serialize(self)?;
-            }
-            // TODO: Support string character escaping
-            Value::String(value) => {
-                self.formatter.begin_string(&mut self.writer)?;
-                self.formatter
-                    .write_string_fragment(&mut self.writer, value)?;
-                self.formatter.end_string(&mut self.writer)?;
-            }
-            Value::Boolean(value) => {
-                self.formatter.write_bool(&mut self.writer, *value)?;
-            }
-            Value::Variable(name) => {
-                self.formatter.begin_variable(&mut self.writer)?;
-                name.serialize(self)?;
-            }
-            Value::Enum(value) => {
-                value.serialize(self)?;
-            }
-            Value::List(list) => {
-                self.serialize_value_array(list)?;
-            }
-            Value::Object(value) => {
-                self.serialize_object(value)?;
-            }
-            Value::Binary(value) => {
-                self.formatter
-                    .write_byte_array(&mut self.writer, &value[..])?;
+    fn serialize_const_value_object(
+        &mut self,
+        value: &IndexMap<Name, ConstValue>,
+    ) -> anyhow::Result<()> {
+        self.formatter.begin_object(&mut self.writer)?;
+
+        let mut iter = value.iter().peekable();
+        while let Some((key, value)) = iter.next() {
+            key.serialize(self)?;
+            self.formatter
+                .write_name_value_separator(&mut self.writer)?;
+            value.serialize(self)?;
+
+            // If there are more items, add a separator
+            if iter.peek().is_some() {
+                self.formatter.write_item_separator(&mut self.writer)?;
             }
         }
+
+        self.formatter.end_object(&mut self.writer)?;
 
         Ok(())
     }
@@ -444,115 +600,6 @@ where
         } else {
             unreachable!("invalid number")
         }
-
-        Ok(())
-    }
-
-    fn serialize_directive(&mut self, value: &Directive) -> anyhow::Result<()> {
-        self.formatter.begin_directive(&mut self.writer)?;
-        value.name.serialize(self)?;
-
-        if !value.arguments.is_empty() {
-            self.serialize_arguments(&value.arguments)?;
-        }
-
-        Ok(())
-    }
-
-    fn serialize_variable_definition(&mut self, value: &VariableDefinition) -> anyhow::Result<()> {
-        self.formatter.begin_variable(&mut self.writer)?;
-        value.name.serialize(self)?;
-        self.formatter
-            .write_name_value_separator(&mut self.writer)?;
-        value.var_type.serialize(self)?;
-
-        if let Some(default_value) = &value.default_value {
-            self.formatter
-                .write_variable_default_value_separator(&mut self.writer)?;
-            default_value.serialize(self)?;
-        }
-
-        for directive in value.directives.iter() {
-            directive.serialize(self)?;
-        }
-
-        Ok(())
-    }
-
-    fn serialize_type(&mut self, value: &Type) -> anyhow::Result<()> {
-        match &value.base {
-            BaseType::Named(name) => {
-                name.serialize(self)?;
-            }
-            BaseType::List(list) => {
-                self.formatter.begin_array(&mut self.writer)?;
-                list.serialize(self)?;
-                self.formatter.end_array(&mut self.writer)?;
-            }
-        }
-
-        if !value.nullable {
-            self.formatter
-                .write_non_null_type_indicator(&mut self.writer)?;
-        }
-
-        Ok(())
-    }
-
-    fn serialize_fragment_definition(
-        &mut self,
-        name: &Name,
-        value: &Positioned<FragmentDefinition>,
-    ) -> anyhow::Result<()> {
-        self.formatter
-            .begin_operation_or_fragment_definition(&mut self.writer)?;
-
-        self.formatter.write_keyword(&mut self.writer, "fragment")?;
-
-        self.formatter.write_separator(&mut self.writer)?;
-        name.serialize(self)?;
-        self.formatter.write_separator(&mut self.writer)?;
-
-        value.node.type_condition.serialize(self)?;
-
-        for directive in value.node.directives.iter() {
-            directive.serialize(self)?;
-        }
-
-        value.node.selection_set.serialize(self)?;
-
-        Ok(())
-    }
-
-    fn serialize_type_condition(&mut self, value: &TypeCondition) -> anyhow::Result<()> {
-        self.formatter.write_keyword(&mut self.writer, "on")?;
-        self.formatter.write_separator(&mut self.writer)?;
-        value.on.serialize(self)
-    }
-
-    fn serialize_fragment_spread(&mut self, value: &FragmentSpread) -> anyhow::Result<()> {
-        self.formatter.write_keyword(&mut self.writer, "...")?;
-        value.fragment_name.serialize(self)?;
-
-        for directive in value.directives.iter() {
-            directive.serialize(self)?;
-        }
-
-        Ok(())
-    }
-
-    fn serialize_inline_fragment(&mut self, value: &InlineFragment) -> anyhow::Result<()> {
-        self.formatter.write_keyword(&mut self.writer, "...")?;
-
-        if let Some(type_condition) = &value.type_condition {
-            type_condition.serialize(self)?;
-        }
-
-        for directive in value.directives.iter() {
-            directive.serialize(self)?;
-        }
-
-        value.selection_set.serialize(self)?;
 
         Ok(())
     }
