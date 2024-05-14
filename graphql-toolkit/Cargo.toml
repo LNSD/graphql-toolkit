@@ -1,0 +1,11 @@
+[package]
+name = "graphql-toolkit"
+description = "A collection of Rust modules to process GraphQL documents"
+version = "0.0.0"
+edition = "2021"
+repository = "https://github.com/LNSD/graphql-toolkit"
+authors = ["Lorenzo Delgado (LNSD) <lnsdev@proton.me>"]
+license = "Apache-2.0"
+rust-version = "1.71.1"
+
+[dependencies]

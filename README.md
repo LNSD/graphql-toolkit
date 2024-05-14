@@ -1,5 +1,6 @@
 # graphql-toolkit
 
+[![graphql-toolkit](https://img.shields.io/crates/v/graphql-toolkit)](https://crates.io/crates/graphql-toolkit)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![ci](https://github.com/LNSD/graphql-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/LNSD/graphql-toolkit/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/LNSD/graphql-toolkit/graph/badge.svg?token=4MAWTRVWYJ)](https://codecov.io/gh/LNSD/graphql-toolkit)
