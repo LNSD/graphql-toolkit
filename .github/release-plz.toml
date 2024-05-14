@@ -4,3 +4,7 @@ pr_labels = ["release"]     # Add the `release` label to the release Pull Reques
 pr_draft = true             # Create release PR as a draft
 publish = false             # Disable `cargo publish` for the workspace
 release = false             # Disable release-plz for the workspace
+
+[[package]]
+name = "graphql-toolkit"
+release = true          # Enable release-plz for the package
