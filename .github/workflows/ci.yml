@@ -40,24 +40,21 @@ jobs:
         with:
           crate: cargo-llvm-cov
 
-      - name: Setup Rust problem matchers
-        uses: r7kamura/rust-problem-matchers@2c2f1016021a7455a6b5b4bbae31145f3b3cd83a # v1
-
       - name: Cargo check
-        run: cargo check --all-targets --all-features
+        run: cargo +stable check --all-targets --all-features
 
       - name: Cargo fmt
         run: cargo +nightly fmt --all -- --check
 
       - name: Cargo clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings --force-warn deprecated --force-warn dead-code
+        run: cargo +stable clippy --all-targets --all-features -- -D warnings --force-warn deprecated --force-warn dead-code
 
       ## Tests
       - name: Run unit tests
-        run: cargo llvm-cov test --lib --lcov --output-path unit-lcov.info
+        run: cargo +stable llvm-cov test --lib --lcov --output-path unit-lcov.info
 
       - name: Run integration tests
-        run: cargo llvm-cov test --test '*' --lcov --output-path it-lcov.info
+        run: cargo +stable llvm-cov test --test '*' --lcov --output-path it-lcov.info
 
       - name: Upload unit tests coverage report to codecov
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3
