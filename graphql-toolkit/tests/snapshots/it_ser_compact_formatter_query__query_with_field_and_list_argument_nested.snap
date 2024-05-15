@@ -2,4 +2,4 @@
 source: graphql-toolkit/tests/it_ser_compact_formatter_query.rs
 expression: query
 ---
-query($foo:String){field}
+{field(argv:[[1],[2,3],[4,5,6]]){field2}}

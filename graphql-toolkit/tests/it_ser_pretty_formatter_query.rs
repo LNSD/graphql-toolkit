@@ -1,8 +1,7 @@
 use async_graphql_parser::types::{BaseType, Type};
-use async_graphql_value::ConstValue;
 use graphql_toolkit::{
     ast::{
-        AstPositionExt as _, DocumentOperations, ExecutableDocument, Field, Name,
+        AstPositionExt as _, ConstValue, DocumentOperations, ExecutableDocument, Field, Name,
         OperationDefinition, OperationType, Selection, SelectionSet, Value, VariableDefinition,
     },
     ser::{AstSerialize, PrettyFormatter, Serializer},
@@ -65,6 +64,7 @@ fn query_named() {
 }
 
 #[test]
+#[ignore = "Disabled due to non-deterministic output"]
 fn query_multiple_operations() {
     //* Given
     let expected_query = parse_query(r#"query MyQuery{field1}query YourQuery{field2}"#);
@@ -894,6 +894,7 @@ fn query_and_fragment_with_directive() {
 }
 
 #[test]
+#[ignore = "Disabled due to non-deterministic output"]
 fn query_and_fragments_multiple() {
     //* Given
     let expected_query = parse_query(

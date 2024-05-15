@@ -2,4 +2,4 @@
 source: graphql-toolkit/tests/it_ser_compact_formatter_query.rs
 expression: query
 ---
-query($foo:String){field}
+{field1}fragment MyFragment on SomeType@defer{field2}
