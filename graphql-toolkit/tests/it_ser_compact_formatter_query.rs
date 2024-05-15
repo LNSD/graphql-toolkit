@@ -650,9 +650,8 @@ fn query_with_variable_default_value_and_directive() {
 #[test]
 fn query_and_fragment() {
     //* Given
-    let expected_query = parse_query(
-        r#"query{field,...MyFragment}fragment MyFragment on MyFragmentTypeName{field}"#,
-    );
+    let expected_query =
+        parse_query(r#"{field,...MyFragment}fragment MyFragment on MyFragmentTypeName{field}"#);
 
     //* When
     let query = to_string(&expected_query).expect("Failed to serialize query");
@@ -666,7 +665,7 @@ fn query_and_fragment() {
 fn query_and_fragment_with_directives() {
     //* Given
     let expected_query = parse_query(
-        r#"query{field@defer,...MyFragment@skip(if:$foo)}fragment MyFragment on MyFragmentTypeName@directive{field}"#,
+        r#"{field@defer,...MyFragment@skip(if:$foo)}fragment MyFragment on MyFragmentTypeName@directive{field}"#,
     );
 
     //* When

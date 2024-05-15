@@ -1,0 +1,9 @@
+---
+source: graphql-toolkit/tests/it_ser_pretty_formatter_query.rs
+expression: query
+---
+{
+  field(argv: [1,2,3]) {
+    field2
+  }
+}
