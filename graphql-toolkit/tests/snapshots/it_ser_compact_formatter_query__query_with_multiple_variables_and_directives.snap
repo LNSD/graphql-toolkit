@@ -1,5 +1,0 @@
----
-source: thegraph-graphql-poet/tests/it_ser_compact_formatter_query.rs
-expression: query
----
-query($foo:String!@lowerCase,$bar:String!@upperCase@deprecated){field}
