@@ -1,8 +1,8 @@
-use async_graphql_parser::types::{BaseType, Type};
 use graphql_toolkit::{
     ast::{
-        AstPositionExt as _, ConstValue, DocumentOperations, ExecutableDocument, Field, Name,
-        OperationDefinition, OperationType, Selection, SelectionSet, Value, VariableDefinition,
+        AstPositionExt as _, BaseType, ConstValue, DocumentOperations, ExecutableDocument, Field,
+        Name, OperationDefinition, OperationType, Selection, SelectionSet, Type, Value,
+        VariableDefinition,
     },
     ser::{AstSerialize, PrettyFormatter, Serializer},
 };
