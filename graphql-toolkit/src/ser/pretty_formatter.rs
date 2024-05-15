@@ -2,7 +2,7 @@ use std::io;
 
 use super::formatter::Formatter;
 
-/// This formatter generate a GraphQL expression with a readable format.
+/// This formatter generates a GraphQL document with a human-readable format.
 #[derive(Clone, Debug)]
 pub struct PrettyFormatter<'a> {
     current_indent_level: usize,

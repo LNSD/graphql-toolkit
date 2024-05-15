@@ -1,6 +1,6 @@
 use super::formatter::Formatter;
 
-/// This formatter compacts a GraphQL expression with no extra whitespace.
+/// This formatter generates a compact GraphQL document with no extra whitespace.
 #[derive(Clone, Debug)]
 pub struct CompactFormatter;
 

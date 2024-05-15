@@ -1,5 +1,7 @@
 use std::io;
 
+/// This trait abstracts away serializing the GraphQL control characters, which allows the user to
+/// optionally pretty print the GraphQL output.
 pub trait Formatter {
     /// Writes a raw GraphQL fragment that doesn't need escaping to the writer.
     #[inline]
