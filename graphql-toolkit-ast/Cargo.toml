@@ -9,4 +9,4 @@ rust-version = "1.71.1"
 
 [dependencies]
 async-graphql-parser = "7.0.5"
-async-graphql-value = "7.0.5"
+graphql-toolkit-value = { version = "0.1.0", path = "../graphql-toolkit-value" }
