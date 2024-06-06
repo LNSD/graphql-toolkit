@@ -7,9 +7,9 @@ pub use self::{
     serializer::Serializer,
 };
 use crate::ast::{
-    ConstValue, Directive, ExecutableDocument, Field, FragmentSpread, InlineFragment, Name, Number,
-    OperationDefinition, Positioned, Selection, SelectionSet, Type, TypeCondition, Value,
-    VariableDefinition,
+    ConstValue, Directive, ExecutableDocument, Field, FragmentDefinition, FragmentSpread,
+    InlineFragment, Name, Number, OperationDefinition, Positioned, Selection, SelectionSet, Type,
+    TypeCondition, Value, VariableDefinition,
 };
 
 mod compact_formatter;
@@ -17,14 +17,16 @@ mod formatter;
 mod pretty_formatter;
 mod serializer;
 
+/// A trait for serializing a Rust GraphQL AST data into a GraphQL document data.
 pub trait AstSerialize {
+    /// Serialize this value into the given serializer.
     fn serialize<W, F>(&self, ser: &mut Serializer<W, F>) -> anyhow::Result<()>
     where
         W: io::Write,
         F: Formatter;
 }
 
-/// Implement `AstSerialize` for a type that can be serialized.
+// Implement `AstSerialize` for a type that can be serialized.
 macro_rules! impl_serialize {
     ($ty:ty, $method:ident) => {
         impl AstSerialize for $ty {
@@ -63,9 +65,33 @@ impl AstSerialize for OperationDefinition {
         W: io::Write,
         F: Formatter,
     {
-        // If we are serializing an "operation definition" instance
-        // assume that there is a single operation in the document
-        ser.serialize_operation_definition(self, None, true, true)
+        // If we are serializing an "operation definition" instance assume that there is a single
+        // operation in the document
+        ser.serialize_operation_definition(self, None, true)
+    }
+}
+
+impl AstSerialize for (Name, OperationDefinition) {
+    #[inline]
+    fn serialize<W, F>(&self, ser: &mut Serializer<W, F>) -> anyhow::Result<()>
+    where
+        W: io::Write,
+        F: Formatter,
+    {
+        let (name, operation) = self;
+        ser.serialize_operation_definition(operation, Some(name), true)
+    }
+}
+
+impl AstSerialize for (Name, FragmentDefinition) {
+    #[inline]
+    fn serialize<W, F>(&self, ser: &mut Serializer<W, F>) -> anyhow::Result<()>
+    where
+        W: io::Write,
+        F: Formatter,
+    {
+        let (name, fragment) = self;
+        ser.serialize_fragment_definition(name, fragment)
     }
 }
 
@@ -77,11 +103,10 @@ impl_serialize!(Selection, serialize_selection);
 impl_serialize_positioned!(Selection);
 impl_serialize!(Field, serialize_selection_field);
 impl_serialize_positioned!(Field);
-impl_serialize!(Name, serialize_name);
-impl_serialize_positioned!(Name);
-impl_serialize!(Value, serialize_value);
-impl_serialize_positioned!(Value);
-impl_serialize!(Number, serialize_number);
+impl_serialize!(FragmentSpread, serialize_fragment_spread);
+impl_serialize_positioned!(FragmentSpread);
+impl_serialize!(InlineFragment, serialize_inline_fragment);
+impl_serialize_positioned!(InlineFragment);
 impl_serialize!(Directive, serialize_directive);
 impl_serialize_positioned!(Directive);
 impl_serialize!(VariableDefinition, serialize_variable_definition);
@@ -92,10 +117,11 @@ impl_serialize!(ConstValue, serialize_const_value);
 impl_serialize_positioned!(ConstValue);
 impl_serialize!(TypeCondition, serialize_type_condition);
 impl_serialize_positioned!(TypeCondition);
-impl_serialize!(FragmentSpread, serialize_fragment_spread);
-impl_serialize_positioned!(FragmentSpread);
-impl_serialize!(InlineFragment, serialize_inline_fragment);
-impl_serialize_positioned!(InlineFragment);
+impl_serialize!(Name, serialize_name);
+impl_serialize_positioned!(Name);
+impl_serialize!(Value, serialize_value);
+impl_serialize_positioned!(Value);
+impl_serialize!(Number, serialize_number);
 
 /// Serialize the given GraphQL AST as a compact GraphQL document into the I/O stream.
 #[inline]
