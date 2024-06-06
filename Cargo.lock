@@ -96,7 +96,10 @@ dependencies = [
 
 [[package]]
 name = "graphql-toolkit-value"
-version = "0.0.0"
+version = "0.1.0"
+dependencies = [
+ "async-graphql-value",
+]
 
 [[package]]
 name = "hashbrown"
