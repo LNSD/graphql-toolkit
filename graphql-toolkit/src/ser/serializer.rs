@@ -51,24 +51,26 @@ where
     ) -> anyhow::Result<()> {
         match &value.operations {
             DocumentOperations::Single(def) => {
-                self.serialize_operation_definition(&def.node, None, true, true)?;
+                self.serialize_operation_definition(&def.node, None, true)?;
             }
             DocumentOperations::Multiple(def) => {
                 let mut first_operation = true;
                 for (name, def) in def.iter() {
-                    self.serialize_operation_definition(
-                        &def.node,
-                        Some(name),
-                        false,
-                        first_operation,
-                    )?;
+                    if !first_operation {
+                        self.formatter
+                            .before_operation_or_fragment_definition(&mut self.writer)?;
+                    }
+
+                    self.serialize_operation_definition(&def.node, Some(name), false)?;
                     first_operation = false;
                 }
             }
         }
 
         for (name, fragment) in value.fragments.iter() {
-            self.serialize_fragment_definition(name, fragment, false)?;
+            self.formatter
+                .before_operation_or_fragment_definition(&mut self.writer)?;
+            self.serialize_fragment_definition(name, &fragment.node)?;
         }
 
         Ok(())
@@ -79,13 +81,7 @@ where
         value: &OperationDefinition,
         name: Option<&Name>,
         single: bool,
-        first: bool,
     ) -> anyhow::Result<()> {
-        if !first {
-            self.formatter
-                .before_operation_or_fragment_definition(&mut self.writer)?;
-        }
-
         // Use the "query shorthand" if a document contains *only one operation* and
         // that operation is a query which defines *no variables* and contains *no
         // directives* then that operation may be represented in a shorthand form
@@ -344,30 +340,24 @@ where
     pub(super) fn serialize_fragment_definition(
         &mut self,
         name: &Name,
-        value: &Positioned<FragmentDefinition>,
-        first: bool,
+        value: &FragmentDefinition,
     ) -> anyhow::Result<()> {
-        if !first {
-            self.formatter
-                .before_operation_or_fragment_definition(&mut self.writer)?;
-        }
-
         self.formatter.write_keyword(&mut self.writer, "fragment")?;
 
         self.formatter.write_separator(&mut self.writer)?;
         name.serialize(self)?;
         self.formatter.write_separator(&mut self.writer)?;
 
-        value.node.type_condition.serialize(self)?;
+        value.type_condition.serialize(self)?;
 
-        for directive in value.node.directives.iter() {
+        for directive in value.directives.iter() {
             directive.serialize(self)?;
         }
 
         self.formatter
             .after_operation_or_fragment_signature(&mut self.writer)?;
 
-        value.node.selection_set.serialize(self)?;
+        value.selection_set.serialize(self)?;
 
         Ok(())
     }
