@@ -11,7 +11,7 @@ publish = false
 
 [dependencies]
 anyhow = "1.0"
-graphql-toolkit-ast = { version = "0.1.1", path = "../graphql-toolkit-ast" }
+graphql-toolkit-ast = { version = "0.1.2", path = "../graphql-toolkit-ast" }
 graphql-toolkit-parser = { version = "0.1.1", path = "../graphql-toolkit-parser" }
 itoa = { version = "1.0", default-features = false }
 ryu = { version = "1.0", default-features = false }

@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2](https://github.com/LNSD/graphql-toolkit/compare/graphql-toolkit-ast-v0.1.1...graphql-toolkit-ast-v0.1.2) - 2024-06-06
+
+### Other
+- set crates repository url ([#42](https://github.com/LNSD/graphql-toolkit/pull/42))
+
 ## [0.1.1](https://github.com/LNSD/graphql-toolkit/compare/graphql-toolkit-ast-v0.1.0...graphql-toolkit-ast-v0.1.1) - 2024-06-06
 
 ### Added
