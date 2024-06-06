@@ -8,3 +8,7 @@ release = false             # Disable release-plz for the workspace
 [[package]]
 name = "graphql-toolkit"
 release = true          # Enable release-plz for the package
+
+[[package]]
+name = "graphql-toolkit-ast"
+release = true          # Enable release-plz for the package
