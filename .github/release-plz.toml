@@ -1,9 +1,10 @@
 [workspace]
-git_release_enable = false  # Disable git release
-pr_labels = ["release"]     # Add the `release` label to the release Pull Request
+git_release_enable = true   # Create a git release for the created tag
+git_tag_enable = true       # Create a git tag for the new package version
+pr_labels = ["release"]     # Add the `release` label to the release PR
 pr_draft = true             # Create release PR as a draft
-publish = false             # Disable `cargo publish` for the workspace
 release = false             # Disable release-plz for the workspace
+publish = false             # Disable `cargo publish` for the workspace
 
 [[package]]
 name = "graphql-toolkit"
