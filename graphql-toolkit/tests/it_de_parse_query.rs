@@ -1,11 +1,9 @@
 use assert_matches::assert_matches;
-use graphql_toolkit::{
-    ast::{
-        BaseType, ConstValue, DocumentOperations, ExecutableDocument, Field, FragmentDefinition,
-        FragmentSpread, InlineFragment, Name, OperationDefinition, OperationType, Positioned,
-        Selection, SelectionSet, TypeCondition, Value,
-    },
-    de::parse_query,
+use graphql_toolkit::de::parse_query;
+use graphql_toolkit_ast::{
+    BaseType, ConstValue, DocumentOperations, ExecutableDocument, Field, FragmentDefinition,
+    FragmentSpread, InlineFragment, Name, OperationDefinition, OperationType, Positioned,
+    Selection, SelectionSet, TypeCondition, Value,
 };
 
 #[test]

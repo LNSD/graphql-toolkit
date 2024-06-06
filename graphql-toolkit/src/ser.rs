@@ -2,14 +2,15 @@
 
 use std::io;
 
-pub use self::{
-    compact_formatter::CompactFormatter, formatter::Formatter, pretty_formatter::PrettyFormatter,
-    serializer::Serializer,
-};
-use crate::ast::{
+use graphql_toolkit_ast::{
     ConstValue, Directive, ExecutableDocument, Field, FragmentDefinition, FragmentSpread,
     InlineFragment, Name, Number, OperationDefinition, Positioned, Selection, SelectionSet, Type,
     TypeCondition, Value, VariableDefinition,
+};
+
+pub use self::{
+    compact_formatter::CompactFormatter, formatter::Formatter, pretty_formatter::PrettyFormatter,
+    serializer::Serializer,
 };
 
 mod compact_formatter;

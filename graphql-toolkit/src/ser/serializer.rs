@@ -1,16 +1,13 @@
 use std::io;
 
-use async_graphql_value::{ConstValue, Name, Value};
-
-use crate::{
-    ast::{
-        indexmap::IndexMap, BaseType, Directive, DocumentOperations, ExecutableDocument, Field,
-        FragmentDefinition, FragmentSpread, InlineFragment, Number, OperationDefinition,
-        OperationType, Positioned, Selection, SelectionSet, Type, TypeCondition,
-        VariableDefinition,
-    },
-    ser::{AstSerialize, CompactFormatter, Formatter},
+use graphql_toolkit_ast::{
+    indexmap::IndexMap, BaseType, ConstValue, Directive, DocumentOperations, ExecutableDocument,
+    Field, FragmentDefinition, FragmentSpread, InlineFragment, Name, Number, OperationDefinition,
+    OperationType, Positioned, Selection, SelectionSet, Type, TypeCondition, Value,
+    VariableDefinition,
 };
+
+use crate::ser::{AstSerialize, CompactFormatter, Formatter};
 
 /// A structure for serializing Rust GraphQL AST types to GraphQL documents.
 pub struct Serializer<W, F = CompactFormatter> {
