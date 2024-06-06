@@ -77,8 +77,8 @@ version = "0.0.0"
 dependencies = [
  "anyhow",
  "assert_matches",
- "async-graphql-parser",
  "graphql-toolkit-ast",
+ "graphql-toolkit-parser",
  "indoc",
  "insta",
  "itoa",
