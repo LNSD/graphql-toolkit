@@ -1,10 +1,7 @@
-use graphql_toolkit::{
-    ast::{
-        AstPositionExt as _, BaseType, ConstValue, DocumentOperations, ExecutableDocument, Field,
-        Name, OperationDefinition, OperationType, Selection, SelectionSet, Type, Value,
-        VariableDefinition,
-    },
-    ser::{AstSerialize, PrettyFormatter, Serializer},
+use graphql_toolkit::ser::{AstSerialize, PrettyFormatter, Serializer};
+use graphql_toolkit_ast::{
+    AstPositionExt as _, BaseType, ConstValue, DocumentOperations, ExecutableDocument, Field, Name,
+    OperationDefinition, OperationType, Selection, SelectionSet, Type, Value, VariableDefinition,
 };
 
 /// Test helper function to parse the input using async-graphql-parser.
