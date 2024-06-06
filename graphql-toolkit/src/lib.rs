@@ -1,5 +1,6 @@
 //! A collection of Rust modules to process GraphQL documents
 
-pub mod ast;
+pub use graphql_toolkit_ast as ast;
+
 pub mod de;
 pub mod ser;
