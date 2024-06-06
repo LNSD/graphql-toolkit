@@ -7,6 +7,7 @@ repository = "https://github.com/LNSD/graphql-toolkit"
 authors = ["Lorenzo Delgado (LNSD) <lnsdev@proton.me>"]
 license = "Apache-2.0"
 rust-version = "1.71.1"
+publish = false
 
 [dependencies]
 anyhow = "1.0"
