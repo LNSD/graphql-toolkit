@@ -1,1 +1,1 @@
-pub use async_graphql_parser::{parse_query, parse_schema};
+pub use graphql_toolkit_parser::{parse_query, parse_schema};
