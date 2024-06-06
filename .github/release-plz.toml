@@ -11,5 +11,9 @@ name = "graphql-toolkit-ast"
 release = true          # Enable release-plz for the package
 
 [[package]]
+name = "graphql-toolkit-parser"
+release = true          # Enable release-plz for the package
+
+[[package]]
 name = "graphql-toolkit-value"
 release = true          # Enable release-plz for the package

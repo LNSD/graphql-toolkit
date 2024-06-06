@@ -3,5 +3,6 @@ resolver = "2"
 members = [
     "graphql-toolkit",
     "graphql-toolkit-ast",
+    "graphql-toolkit-parser",
     "graphql-toolkit-value",
 ]
