@@ -95,7 +95,10 @@ dependencies = [
 
 [[package]]
 name = "graphql-toolkit-parser"
-version = "0.0.0"
+version = "0.1.1"
+dependencies = [
+ "async-graphql-parser",
+]
 
 [[package]]
 name = "graphql-toolkit-value"
