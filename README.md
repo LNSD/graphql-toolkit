@@ -13,7 +13,6 @@
 |:-------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------:|
 | [graphql-toolkit-ast](./graphql-toolkit-ast)     |    [![graphql-toolkit-ast](https://img.shields.io/crates/v/graphql-toolkit-ast)](https://crates.io/crates/graphql-toolkit-ast)    |
 | [graphql-toolkit-value](./graphql-toolkit-value) | [![graphql-toolkit-value](https://img.shields.io/crates/v/graphql-toolkit-value)](https://crates.io/crates/graphql-toolkit-value) |
-| [graphql-toolkit](./graphql-toolkit)             |          [![graphql-toolkit](https://img.shields.io/crates/v/graphql-toolkit)](https://crates.io/crates/graphql-toolkit)          |
 
 ## License
 
