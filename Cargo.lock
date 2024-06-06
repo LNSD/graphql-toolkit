@@ -79,6 +79,7 @@ dependencies = [
  "assert_matches",
  "async-graphql-parser",
  "async-graphql-value",
+ "graphql-toolkit-ast",
  "indoc",
  "insta",
  "itoa",
