@@ -1,0 +1,7 @@
+{
+  ...MyFragment
+  ... on MyType {
+    field2
+  }
+  field
+}

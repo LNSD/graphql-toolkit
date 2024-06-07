@@ -5,4 +5,5 @@ members = [
     "graphql-toolkit-ast",
     "graphql-toolkit-parser",
     "graphql-toolkit-value",
+    "testlib/parser-testdata",
 ]

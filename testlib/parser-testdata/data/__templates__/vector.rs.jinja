@@ -1,0 +1,14 @@
+/// Test vector: `{{ data_set }}/{{ name }}`
+///
+/// ```graphql
+{% for line in content -%}
+///{{ line | indent(1, true) }}
+{% endfor -%}
+/// ```
+///
+/// See file: `{{ data_set }}/{{ name }}.graphql`
+pub const {{ name | upper | replace("/","_") }}: &str = indoc::indoc! {r###"
+{% for line in content -%}
+{{ line |  indent(2, true) }}
+{% endfor -%}
+"###};

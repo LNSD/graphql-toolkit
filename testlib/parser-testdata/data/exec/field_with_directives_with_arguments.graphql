@@ -1,0 +1,3 @@
+{
+  field @skip(if: $skip)
+}

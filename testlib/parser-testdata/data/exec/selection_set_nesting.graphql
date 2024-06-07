@@ -1,0 +1,8 @@
+{
+  field1 {
+    field21
+    field22 {
+      field3
+    }
+  }
+}
