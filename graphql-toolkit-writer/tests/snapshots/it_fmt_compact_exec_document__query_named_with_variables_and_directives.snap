@@ -1,0 +1,5 @@
+---
+source: graphql-toolkit-writer/tests/it_fmt_compact_exec_document.rs
+expression: query
+---
+query MyQuery($var1:String!,$var2:Bool)@defer@skip(if:$var2){field}
