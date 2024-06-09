@@ -10,3 +10,8 @@ rust-version = "1.71.1"
 
 [dependencies]
 async-graphql-parser = "7.0.5"
+graphql-toolkit-ast = { version = "0.1.2", path = "../graphql-toolkit-ast" }
+
+[dev-dependencies]
+assert_matches = "1.5.0"
+testlib-parser-testdata = { path = "../testlib/parser-testdata" }
