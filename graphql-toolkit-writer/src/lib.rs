@@ -1,0 +1,1 @@
+//! A GraphQL document writer.
