@@ -1,0 +1,5 @@
+---
+source: graphql-toolkit-writer/tests/it_fmt_compact_exec_document.rs
+expression: query
+---
+{field1}fragment MyFragment on SomeType{field2}fragment YourFragment on AnotherType{field3}

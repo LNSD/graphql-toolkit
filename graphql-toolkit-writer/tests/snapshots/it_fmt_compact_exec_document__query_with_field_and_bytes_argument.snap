@@ -1,0 +1,5 @@
+---
+source: graphql-toolkit-writer/tests/it_fmt_compact_exec_document.rs
+expression: query
+---
+{field(argv:[1,2,3]){field2}}

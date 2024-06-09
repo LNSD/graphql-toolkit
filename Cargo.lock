@@ -114,7 +114,14 @@ dependencies = [
 name = "graphql-toolkit-writer"
 version = "0.0.0"
 dependencies = [
+ "anyhow",
  "async-graphql-value",
+ "graphql-toolkit-ast",
+ "graphql-toolkit-parser",
+ "indoc",
+ "insta",
+ "itoa",
+ "ryu",
 ]
 
 [[package]]
