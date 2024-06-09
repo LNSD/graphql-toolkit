@@ -1,0 +1,8 @@
+{
+  field(arg: """
+  My name
+    is
+
+  Ferris
+  """)
+}

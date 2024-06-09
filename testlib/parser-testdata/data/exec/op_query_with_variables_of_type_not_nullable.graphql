@@ -1,0 +1,3 @@
+query($var1: Int, $var2: String!) {
+  field
+}

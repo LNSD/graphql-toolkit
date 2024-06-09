@@ -1,0 +1,14 @@
+[package]
+name = "testlib-parser-testdata"
+description = "A set of test data inputs provided to the GraphQL parser in order to test that system"
+edition = "2021"
+publish = false
+
+[features]
+codegen = []
+
+[dependencies]
+indoc = "2.0.5"
+
+[build-dependencies]
+minijinja = { version = "2.0.1", features = ["builtins"] }

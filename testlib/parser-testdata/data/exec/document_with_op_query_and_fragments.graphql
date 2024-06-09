@@ -1,0 +1,7 @@
+query {
+  field
+}
+
+fragment MyFragment on MyType {
+  field
+}
