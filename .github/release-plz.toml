@@ -17,3 +17,7 @@ release = true          # Enable release-plz for the package
 [[package]]
 name = "graphql-toolkit-value"
 release = true          # Enable release-plz for the package
+
+[[package]]
+name = "graphql-toolkit-writer"
+release = true          # Enable release-plz for the package
