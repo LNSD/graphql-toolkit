@@ -1,7 +1,0 @@
----
-source: graphql-toolkit/tests/it_ser_pretty_formatter_query.rs
-expression: query
----
-query ($argv: Bytes = [1,2,3]) {
-  field
-}

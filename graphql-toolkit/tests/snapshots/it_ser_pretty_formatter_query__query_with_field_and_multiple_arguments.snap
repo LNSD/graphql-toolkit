@@ -1,9 +1,0 @@
----
-source: graphql-toolkit/tests/it_ser_pretty_formatter_query.rs
-expression: query
----
-{
-  field1(arg1: "value1", arg2: "value2") {
-    field2
-  }
-}
