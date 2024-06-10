@@ -1,0 +1,11 @@
+---
+source: graphql-toolkit/tests/it_ser_pretty_formatter_query.rs
+expression: query
+---
+{
+  ... {
+    field21
+    field22
+  }
+  field1
+}
