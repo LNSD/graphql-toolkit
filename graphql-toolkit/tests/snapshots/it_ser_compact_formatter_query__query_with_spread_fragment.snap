@@ -1,5 +1,0 @@
----
-source: graphql-toolkit/tests/it_ser_compact_formatter_query.rs
-expression: query
----
-{...fragmentName,field}

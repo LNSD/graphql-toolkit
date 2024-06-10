@@ -1,7 +1,0 @@
----
-source: graphql-toolkit/tests/it_ser_pretty_formatter_query.rs
-expression: query
----
-query MyQuery($var1: String!, $var2: Bool) @defer @skip(if: $var2) {
-  field
-}

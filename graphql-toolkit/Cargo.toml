@@ -8,15 +8,3 @@ authors = ["Lorenzo Delgado (LNSD) <lnsdev@proton.me>"]
 license = "Apache-2.0"
 rust-version = "1.71.1"
 publish = false
-
-[dependencies]
-anyhow = "1.0"
-graphql-toolkit-ast = { version = "0.1.2", path = "../graphql-toolkit-ast" }
-graphql-toolkit-parser = { version = "0.1.2", path = "../graphql-toolkit-parser" }
-itoa = { version = "1.0", default-features = false }
-ryu = { version = "1.0", default-features = false }
-
-[dev-dependencies]
-assert_matches = "1.5"
-indoc = "2.0.5"
-insta = "1.38.0"
