@@ -8,16 +8,24 @@ publish = false             # Disable `cargo publish` for the workspace
 
 [[package]]
 name = "graphql-toolkit-ast"
-release = true          # Enable release-plz for the package
+release = true              # Enable release-plz for the package
+git_release_enable = true   # Create a git release for the created tag
+git_tag_enable = true       # Create a git tag for the new package version
 
 [[package]]
 name = "graphql-toolkit-parser"
-release = true          # Enable release-plz for the package
+release = true              # Enable release-plz for the package
+git_release_enable = true   # Create a git release for the created tag
+git_tag_enable = true       # Create a git tag for the new package version
 
 [[package]]
 name = "graphql-toolkit-value"
-release = true          # Enable release-plz for the package
+release = true              # Enable release-plz for the package
+git_release_enable = true   # Create a git release for the created tag
+git_tag_enable = true       # Create a git tag for the new package version
 
 [[package]]
 name = "graphql-toolkit-writer"
-release = true          # Enable release-plz for the package
+release = true              # Enable release-plz for the package
+git_release_enable = true   # Create a git release for the created tag
+git_tag_enable = true       # Create a git tag for the new package version
