@@ -1,7 +1,7 @@
 [package]
 name = "graphql-toolkit-writer"
 description = "A GraphQL document writer"
-version = "0.1.0"
+version = "0.1.1"
 repository = "https://github.com/LNSD/graphql-toolkit"
 authors = ["Lorenzo Delgado (LNSD) <lnsdev@proton.me>"]
 license = "Apache-2.0"
