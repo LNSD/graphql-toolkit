@@ -1,0 +1,8 @@
+---
+source: graphql-toolkit/tests/it_ser_pretty_formatter_query.rs
+expression: query
+---
+{
+  ...fragmentName
+  field
+}
