@@ -84,6 +84,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "graphql-toolkit-composer"
+version = "0.0.0"
+
+[[package]]
 name = "graphql-toolkit-parser"
 version = "0.1.2"
 dependencies = [
