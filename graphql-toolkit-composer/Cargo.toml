@@ -1,0 +1,9 @@
+[package]
+name = "graphql-toolkit-composer"
+description = "A GraphQL document composer"
+version = "0.0.0"
+repository = "https://github.com/LNSD/graphql-toolkit"
+authors = ["Lorenzo Delgado (LNSD) <lnsdev@proton.me>"]
+license = "Apache-2.0"
+edition = "2021"
+rust-version = "1.71.1"
