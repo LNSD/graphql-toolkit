@@ -2,8 +2,12 @@
 //!
 //! This module contains the AST types and traits for the GraphQL query language.
 
-pub use async_graphql_parser::{types::*, Pos, Positioned};
 pub use graphql_toolkit_value::*;
+pub use pos::*;
+pub use types::*;
+
+mod pos;
+mod types;
 
 /// A value-to-AST conversion trait that consumes the input value.
 pub trait IntoAst<T> {

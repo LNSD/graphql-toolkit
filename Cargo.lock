@@ -79,8 +79,8 @@ version = "0.0.0"
 name = "graphql-toolkit-ast"
 version = "0.1.2"
 dependencies = [
- "async-graphql-parser",
- "graphql-toolkit-value 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "graphql-toolkit-value 0.1.1",
+ "serde",
 ]
 
 [[package]]
@@ -211,15 +211,15 @@ checksum = "0717cef1bc8b636c6e1c1bbdefc09e6322da8a9321966e8928ef80d20f7f770f"
 
 [[package]]
 name = "memchr"
-version = "2.7.2"
+version = "2.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c8640c5d730cb13ebd907d8d04b52f55ac9a2eec55b440c8892f40d56c76c1d"
+checksum = "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3"
 
 [[package]]
 name = "minijinja"
-version = "2.0.1"
+version = "2.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7165d0e94806d52ad5295e4b54a95176d831814840bc067298ca647e1c956338"
+checksum = "e136ef580d7955019ab0a407b68d77c292a9976907e217900f3f76bc8f6dc1a4"
 dependencies = [
  "serde",
 ]
