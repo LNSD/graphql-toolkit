@@ -10,12 +10,11 @@ rust-version = "1.71.1"
 
 [dependencies]
 anyhow = "1.0.86"
-async-graphql-value = "7.0.5"
-graphql-toolkit-ast = "0.1.2"
+graphql-toolkit-ast = { version = "0.1.2", path = "../graphql-toolkit-ast" }
 itoa = { version = "1.0.11", default-features = false }
 ryu = { version = "1.0.18", default-features = false }
 
 [dev-dependencies]
-graphql-toolkit-parser = "0.1.2"
+graphql-toolkit-parser = { version = "0.1.2", path = "../graphql-toolkit-parser" }
 indoc = "2.0.5"
 insta = "1.39.0"
