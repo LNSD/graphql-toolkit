@@ -84,6 +84,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "graphql-toolkit-ast"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe085f4b40efa7e7872000cd5be508c34af7b8d336e6633b5a8c79bcdec2452f"
+dependencies = [
+ "async-graphql-parser",
+ "graphql-toolkit-value 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "graphql-toolkit-composer"
 version = "0.0.0"
 
@@ -93,7 +103,7 @@ version = "0.1.2"
 dependencies = [
  "assert_matches",
  "async-graphql-parser",
- "graphql-toolkit-ast",
+ "graphql-toolkit-ast 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "testlib-parser-testdata",
 ]
 
@@ -119,7 +129,7 @@ version = "0.1.1"
 dependencies = [
  "anyhow",
  "async-graphql-value",
- "graphql-toolkit-ast",
+ "graphql-toolkit-ast 0.1.2",
  "graphql-toolkit-parser",
  "indoc",
  "insta",
