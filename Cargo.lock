@@ -80,7 +80,7 @@ name = "graphql-toolkit-ast"
 version = "0.1.2"
 dependencies = [
  "async-graphql-parser",
- "graphql-toolkit-value",
+ "graphql-toolkit-value 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -100,6 +100,15 @@ dependencies = [
 [[package]]
 name = "graphql-toolkit-value"
 version = "0.1.1"
+dependencies = [
+ "async-graphql-value",
+]
+
+[[package]]
+name = "graphql-toolkit-value"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0082de2d4e97a92db56bc55309349fff89a8fb3ca81886ff2f187beda2047238"
 dependencies = [
  "async-graphql-value",
 ]
