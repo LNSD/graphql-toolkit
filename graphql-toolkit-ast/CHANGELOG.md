@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0](https://github.com/LNSD/graphql-toolkit/compare/graphql-toolkit-ast-v0.1.2...graphql-toolkit-ast-v0.2.0) - 2024-06-15
+
+### Added
+- *(graphql-toolkit-ast)* fork async-graphql-parser ([#63](https://github.com/LNSD/graphql-toolkit/pull/63))
+
+### Other
+- *(graphql-toolkit-ast)* add fork notice to readme ([#64](https://github.com/LNSD/graphql-toolkit/pull/64))
+- *(graphql-toolkit-ast)* use graphql-toolkit-value released version ([#58](https://github.com/LNSD/graphql-toolkit/pull/58))
+
 ## [0.1.2](https://github.com/LNSD/graphql-toolkit/compare/graphql-toolkit-ast-v0.1.1...graphql-toolkit-ast-v0.1.2) - 2024-06-06
 
 ### Other
