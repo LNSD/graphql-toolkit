@@ -1,7 +1,6 @@
 use assert_matches::assert_matches;
-use async_graphql_parser::types::BaseType;
 use graphql_toolkit_ast::{
-    ConstValue, DocumentOperations, Name, OperationType, Selection, SelectionSet, Value,
+    BaseType, ConstValue, DocumentOperations, Name, OperationType, Selection, SelectionSet, Value,
 };
 use graphql_toolkit_parser::parse_query as parse_exec_document;
 use testlib_parser_testdata as testdata;

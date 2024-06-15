@@ -9,9 +9,12 @@ edition = "2021"
 rust-version = "1.71.1"
 
 [dependencies]
-async-graphql-parser = "7.0.5"
-graphql-toolkit-ast = "0.1.2"
+graphql-toolkit-ast = { version = "0.1.2", path = "../graphql-toolkit-ast" }
+pest = "2.7.10"
+serde = "1.0.203"
 
 [dev-dependencies]
 assert_matches = "1.5.0"
+pest_generator = "2.7.10"
+proc-macro2 = "1.0.85"
 testlib-parser-testdata = { path = "../testlib/parser-testdata" }
