@@ -6,6 +6,11 @@
 > [!Warning]
 > This is a work in progress and is not ready for production use.
 
+## async-graphql-parser fork
+
+The present crate is a fork of the `async-graphql-parser` crate licensed under either of _Apache License, Version 2.0_
+or _MIT license_. The fork occurred at release `7.0.6` (commit `59f150befa7d0ee5abae81a1d23decdbcdb20b15`).
+
 ## License
 
 <sup>
