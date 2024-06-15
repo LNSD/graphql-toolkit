@@ -9,5 +9,5 @@ edition = "2021"
 rust-version = "1.71.1"
 
 [dependencies]
-async-graphql-parser = "7.0.5"
-graphql-toolkit-value = "0.1.1"
+graphql-toolkit-value = { version = "0.1.1", path = "../graphql-toolkit-value" }
+serde = { version = "1.0.203", features = ["derive"] }
