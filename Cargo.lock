@@ -121,7 +121,10 @@ dependencies = [
 name = "graphql-toolkit-value"
 version = "0.1.1"
 dependencies = [
- "async-graphql-value",
+ "bytes",
+ "indexmap",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
