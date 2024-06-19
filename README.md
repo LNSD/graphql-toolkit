@@ -14,6 +14,7 @@
 | [graphql-toolkit-parser](./graphql-toolkit-parser)     |    [![graphql-toolkit-parser](https://img.shields.io/crates/v/graphql-toolkit-parser)](https://crates.io/crates/graphql-toolkit-parser)    |
 | [graphql-toolkit-writer](./graphql-toolkit-writer)     |    [![graphql-toolkit-writer](https://img.shields.io/crates/v/graphql-toolkit-writer)](https://crates.io/crates/graphql-toolkit-writer)    |
 | [graphql-toolkit-composer](./graphql-toolkit-composer) | [![graphql-toolkit-composer](https://img.shields.io/crates/v/graphql-toolkit-composer)](https://crates.io/crates/graphql-toolkit-composer) |
+| [graphql-toolkit-http](./graphql-toolkit-http)         |       [![graphql-toolkit-http](https://img.shields.io/crates/v/graphql-toolkit-http)](https://crates.io/crates/graphql-toolkit-http)       |
 | [graphql-toolkit-ast](./graphql-toolkit-ast)           |        [![graphql-toolkit-ast](https://img.shields.io/crates/v/graphql-toolkit-ast)](https://crates.io/crates/graphql-toolkit-ast)         |
 | [graphql-toolkit-value](./graphql-toolkit-value)       |     [![graphql-toolkit-value](https://img.shields.io/crates/v/graphql-toolkit-value)](https://crates.io/crates/graphql-toolkit-value)      |
 
