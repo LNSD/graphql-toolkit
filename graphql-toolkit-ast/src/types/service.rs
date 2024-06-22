@@ -1,6 +1,9 @@
 //! Service-related GraphQL types.
 
-use super::*;
+use graphql_toolkit_value::{ConstValue, Name};
+
+use super::common::{ConstDirective, Type};
+use crate::pos::Positioned;
 
 /// A GraphQL file or request string defining a GraphQL service.
 ///
@@ -238,6 +241,6 @@ pub enum DirectiveLocation {
     /// An [input value definition](struct.InputValueDefinition.html) on an
     /// input object but not a field.
     InputFieldDefinition,
-    /// An [variable definition](struct.VariableDefinition.html).
+    /// A [variable definition](struct.VariableDefinition.html).
     VariableDefinition,
 }
