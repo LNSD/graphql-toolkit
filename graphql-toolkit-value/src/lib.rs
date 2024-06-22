@@ -1,14 +1,7 @@
 //! GraphQL Toolkit value definitions.
 
 #![warn(missing_docs)]
-#![allow(clippy::uninlined_format_args)]
 #![forbid(unsafe_code)]
-
-mod deserializer;
-mod macros;
-mod serializer;
-mod value_serde;
-mod variables;
 
 use std::{
     borrow::{Borrow, Cow},
@@ -18,26 +11,20 @@ use std::{
 };
 
 use bytes::Bytes;
-pub use deserializer::{from_value, DeserializerError};
 #[doc(hidden)]
 pub use indexmap;
 use indexmap::IndexMap;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
 pub use serde_json::Number;
-pub use serializer::{to_value, SerializerError};
 pub use variables::Variables;
+
+mod macros;
+mod variables;
 
 /// A GraphQL name.
 ///
 /// [Reference](https://spec.graphql.org/June2018/#Name).
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Name(Arc<str>);
-
-impl Serialize for Name {
-    fn serialize<S: Serializer>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error> {
-        serializer.serialize_str(&self.0)
-    }
-}
 
 impl Name {
     /// Create a new name.
@@ -106,14 +93,6 @@ impl<'a> PartialEq<&'a str> for Name {
 impl<'a> PartialEq<Name> for &'a str {
     fn eq(&self, other: &Name) -> bool {
         other == self
-    }
-}
-
-impl<'de> Deserialize<'de> for Name {
-    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        Ok(Self(
-            String::deserialize(deserializer)?.into_boxed_str().into(),
-        ))
     }
 }
 
@@ -304,26 +283,6 @@ impl ConstValue {
             ),
         }
     }
-
-    /// Attempt to convert the value into JSON. This is equivalent to the
-    /// `TryFrom` implementation.
-    ///
-    /// # Errors
-    ///
-    /// Fails if serialization fails (see enum docs for more info).
-    pub fn into_json(self) -> serde_json::Result<serde_json::Value> {
-        self.try_into()
-    }
-
-    /// Attempt to convert JSON into a value. This is equivalent to the
-    /// `TryFrom` implementation.
-    ///
-    /// # Errors
-    ///
-    /// Fails if deserialization fails (see enum docs for more info).
-    pub fn from_json(json: serde_json::Value) -> serde_json::Result<Self> {
-        json.try_into()
-    }
 }
 
 impl Default for ConstValue {
@@ -345,20 +304,6 @@ impl Display for ConstValue {
             Self::List(items) => write_list(items, f),
             Self::Object(map) => write_object(map, f),
         }
-    }
-}
-
-impl TryFrom<serde_json::Value> for ConstValue {
-    type Error = serde_json::Error;
-    fn try_from(value: serde_json::Value) -> Result<Self, Self::Error> {
-        Self::deserialize(value)
-    }
-}
-
-impl TryFrom<ConstValue> for serde_json::Value {
-    type Error = serde_json::Error;
-    fn try_from(value: ConstValue) -> Result<Self, Self::Error> {
-        serde_json::to_value(value)
     }
 }
 
@@ -435,26 +380,6 @@ impl Value {
     pub fn into_const(self) -> Option<ConstValue> {
         self.into_const_with(|_| Err(())).ok()
     }
-
-    /// Attempt to convert the value into JSON. This is equivalent to the
-    /// `TryFrom` implementation.
-    ///
-    /// # Errors
-    ///
-    /// Fails if serialization fails (see enum docs for more info).
-    pub fn into_json(self) -> serde_json::Result<serde_json::Value> {
-        self.try_into()
-    }
-
-    /// Attempt to convert JSON into a value. This is equivalent to the
-    /// `TryFrom` implementation.
-    ///
-    /// # Errors
-    ///
-    /// Fails if deserialization fails (see enum docs for more info).
-    pub fn from_json(json: serde_json::Value) -> serde_json::Result<Self> {
-        json.try_into()
-    }
 }
 
 impl Default for Value {
@@ -483,19 +408,6 @@ impl Display for Value {
 impl From<ConstValue> for Value {
     fn from(value: ConstValue) -> Self {
         value.into_value()
-    }
-}
-
-impl TryFrom<serde_json::Value> for Value {
-    type Error = serde_json::Error;
-    fn try_from(value: serde_json::Value) -> Result<Self, Self::Error> {
-        Self::deserialize(value)
-    }
-}
-impl TryFrom<Value> for serde_json::Value {
-    type Error = serde_json::Error;
-    fn try_from(value: Value) -> Result<Self, Self::Error> {
-        serde_json::to_value(value)
     }
 }
 
