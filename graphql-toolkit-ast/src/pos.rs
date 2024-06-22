@@ -15,7 +15,6 @@ use serde::{Deserialize, Serialize};
 pub struct Pos {
     /// One-based line number.
     pub line: usize,
-
     /// One-based column number.
     pub column: usize,
 }
@@ -81,22 +80,27 @@ impl<T: fmt::Display> fmt::Display for Positioned<T> {
         self.node.fmt(f)
     }
 }
+
 impl<T: PartialEq> PartialEq for Positioned<T> {
     fn eq(&self, other: &Self) -> bool {
         self.node == other.node
     }
 }
+
 impl<T: Eq> Eq for Positioned<T> {}
+
 impl<T: PartialOrd> PartialOrd for Positioned<T> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         self.node.partial_cmp(&other.node)
     }
 }
+
 impl<T: Ord> Ord for Positioned<T> {
     fn cmp(&self, other: &Self) -> Ordering {
         self.node.cmp(&other.node)
     }
 }
+
 impl<T: Hash> Hash for Positioned<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.node.hash(state)
