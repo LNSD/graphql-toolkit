@@ -4,8 +4,8 @@ on:
   merge_group:
   push:
     branches:
-    - "main"
-    - "renovate/lock-file-maintenance"
+      - "main"
+      - "renovate/lock-file-maintenance"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -22,10 +22,10 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
-      - name: Setup Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+      - uses: actions-rust-lang/setup-rust-toolchain@1fbea72663f6d4c03efaab13560c8a24cfd2a7cc # v1
         with:
-          components: rustfmt, clippy, llvm-tools-preview
+          components: clippy, llvm-tools-preview
+          cache: false
 
       - name: Cache rust build files
         uses: Leafwing-Studios/cargo-cache@6c2a159aab4b3ba20f083d241bb1f26b35262b99 # v2
@@ -37,9 +37,6 @@ jobs:
 
       - name: Cargo check
         run: cargo check --all-targets --all-features
-
-      - name: Cargo fmt
-        run: cargo fmt --all -- --check
 
       - name: Cargo clippy
         run: cargo clippy --all-targets --all-features -- -D warnings --force-warn deprecated --force-warn dead-code
@@ -66,3 +63,18 @@ jobs:
         with:
           files: it-lcov.info
           flags: integration
+
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+
+      - name: Setup Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@1fbea72663f6d4c03efaab13560c8a24cfd2a7cc # v1
+        with:
+          toolchain: nightly
+          components: rustfmt
+          cache: false
+
+      - run: cargo +nightly fmt --all -- --check
