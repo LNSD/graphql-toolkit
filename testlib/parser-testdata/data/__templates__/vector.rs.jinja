@@ -7,8 +7,7 @@
 /// ```
 ///
 /// See file: `{{ data_set }}/{{ name }}.graphql`
-pub const {{ name | upper | replace("/","_") }}: &str = indoc::indoc! {r###"
+pub const {{ name | upper | replace("/","_") }}: &str = indoc::indoc! { r###"
 {% for line in content -%}
-{{ line |  indent(2, true) }}
+{{ line |  indent(2, true) }} {%- if loop.last %}"### };{% endif %}
 {% endfor -%}
-"###};

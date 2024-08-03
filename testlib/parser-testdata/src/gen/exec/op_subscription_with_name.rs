@@ -7,8 +7,7 @@
 /// ```
 ///
 /// See file: `exec/op_subscription_with_name.graphql`
-pub const OP_SUBSCRIPTION_WITH_NAME: &str = indoc::indoc! {r###"
+pub const OP_SUBSCRIPTION_WITH_NAME: &str = indoc::indoc! { r###"
   subscription MySubscription {
     field
-  }
-"###};
+  }"### };

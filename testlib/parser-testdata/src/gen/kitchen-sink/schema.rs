@@ -122,7 +122,7 @@
 /// ```
 ///
 /// See file: `kitchen-sink/schema.graphql`
-pub const SCHEMA: &str = indoc::indoc! {r###"
+pub const SCHEMA: &str = indoc::indoc! { r###"
   # Copyright (c) 2015-present, Facebook, Inc.
   #
   # This source code is licensed under the MIT license found in the
@@ -240,5 +240,4 @@ pub const SCHEMA: &str = indoc::indoc! {r###"
   directive @include2(if: Boolean!) on
     | FIELD
     | FRAGMENT_SPREAD
-    | INLINE_FRAGMENT
-"###};
+    | INLINE_FRAGMENT"### };

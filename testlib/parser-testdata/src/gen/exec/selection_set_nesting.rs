@@ -12,7 +12,7 @@
 /// ```
 ///
 /// See file: `exec/selection_set_nesting.graphql`
-pub const SELECTION_SET_NESTING: &str = indoc::indoc! {r###"
+pub const SELECTION_SET_NESTING: &str = indoc::indoc! { r###"
   {
     field1 {
       field21
@@ -20,5 +20,4 @@ pub const SELECTION_SET_NESTING: &str = indoc::indoc! {r###"
         field3
       }
     }
-  }
-"###};
+  }"### };

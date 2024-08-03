@@ -7,8 +7,7 @@
 /// ```
 ///
 /// See file: `exec/op_mutation_with_name.graphql`
-pub const OP_MUTATION_WITH_NAME: &str = indoc::indoc! {r###"
+pub const OP_MUTATION_WITH_NAME: &str = indoc::indoc! { r###"
   mutation MyMutation{
     field
-  }
-"###};
+  }"### };
