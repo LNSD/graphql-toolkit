@@ -59,7 +59,7 @@
 /// ```
 ///
 /// See file: `kitchen-sink/exec.graphql`
-pub const EXEC: &str = indoc::indoc! {r###"
+pub const EXEC: &str = indoc::indoc! { r###"
   # Copyright (c) 2015-present, Facebook, Inc.
   #
   # This source code is licensed under the MIT license found in the
@@ -114,5 +114,4 @@ pub const EXEC: &str = indoc::indoc! {r###"
   query otherQuery {
     unnamed(truthy: true, falsey: false, nullish: null),
     query
-  }
-"###};
+  }"### };

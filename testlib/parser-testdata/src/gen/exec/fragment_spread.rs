@@ -7,8 +7,7 @@
 /// ```
 ///
 /// See file: `exec/fragment_spread.graphql`
-pub const FRAGMENT_SPREAD: &str = indoc::indoc! {r###"
+pub const FRAGMENT_SPREAD: &str = indoc::indoc! { r###"
   {
     ...MyFragment
-  }
-"###};
+  }"### };

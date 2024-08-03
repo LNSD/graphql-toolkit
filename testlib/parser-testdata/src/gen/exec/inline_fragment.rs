@@ -9,10 +9,9 @@
 /// ```
 ///
 /// See file: `exec/inline_fragment.graphql`
-pub const INLINE_FRAGMENT: &str = indoc::indoc! {r###"
+pub const INLINE_FRAGMENT: &str = indoc::indoc! { r###"
   {
     ...{
       field
     }
-  }
-"###};
+  }"### };

@@ -7,8 +7,7 @@
 /// ```
 ///
 /// See file: `exec/op_query_with_name.graphql`
-pub const OP_QUERY_WITH_NAME: &str = indoc::indoc! {r###"
+pub const OP_QUERY_WITH_NAME: &str = indoc::indoc! { r###"
   query MyQuery{
     field
-  }
-"###};
+  }"### };
