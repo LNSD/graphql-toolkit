@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1](https://github.com/LNSD/graphql-toolkit/compare/graphql-toolkit-writer-v0.2.0...graphql-toolkit-writer-v0.2.1) - 2024-08-24
+
+### Other
+- updated the following local packages: graphql-toolkit-ast
+
 ## [0.2.0](https://github.com/LNSD/graphql-toolkit/compare/graphql-toolkit-writer-v0.1.1...graphql-toolkit-writer-v0.2.0) - 2024-06-15
 
 ### Other
