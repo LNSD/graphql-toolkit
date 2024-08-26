@@ -28,7 +28,7 @@ jobs:
           cache: false
 
       - name: Cache rust build files
-        uses: Leafwing-Studios/cargo-cache@8763a8b3c2f500b6c17550b7aed48ff4bc86aee6 # v2
+        uses: Leafwing-Studios/cargo-cache@d8d3ade1253fd7594b50f9e75cfe9eb187b18310 # v2
 
       - name: Install Cargo LLVM cov
         uses: baptiste0928/cargo-install@904927dbe77864e0f2281519fe9d5bd097a220b3 # v3
